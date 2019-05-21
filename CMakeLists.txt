@@ -94,32 +94,22 @@ set(CMAKE_AUTOUIC ON)
 #message("QT_LIB_DIRS=${QT_LIB_DIRS}")
 message("CONAN_LIB_DIRS_QT=${CONAN_LIB_DIRS_QT}")
 
-find_package(Qt5Core CONFIG REQUIRED)
-# TODO: This ends up empty!
-message("Qt5=${Qt5}")
-
-# TODO: This too!
-find_package(Qt5Core 5.12.3 REQUIRED PATHS ${CONAN_LIB_DIRS_QT} NO_DEFAULT_PATH)
-message("Qt5Core=${Qt5Core}")
-
-# Tried some stuff
-#set(pkg_qt CONAN_PKG::qt)
-#message("CONAN_PKG::qt = ${pkg_qt}")
-#message("QT_INCLUDE_DIRS=${QT_INCLUDE_DIRS}")
-#message("==================================")
-#message("CONAN_LIBS=${CONAN_LIBS}")
-
-#find_package(Qt5Core CONFIG REQUIRED)
-#message("Qt5Core=${Qt5Core}")
-
-#message("CONAN_LIBS_QT=${CONAN_LIBS_QT}")
-
-#find_package(Qt5Core 5.12.3 REQUIRED PATHS ${CONAN_LIB_DIRS_QT}/cmake/ NO_DEFAULT_PATH)
-#message("Qt5Core=${Qt5Core}")
-
-# This is the only way I have found to find libQt5Core.so
-find_library(QT_LIBRARY NAMES Qt5Core PATHS ${CONAN_LIB_DIRS_QT})
-message("QT_LIBRARY=${QT_LIBRARY}")
+find_package(Qt5Core 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Core 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Widgets 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Sql 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Network 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Xml 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Concurrent 5.12.3 CONFIG REQUIRED)
+find_package(Qt5PrintSupport 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Gui 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Quick 5.12.3 CONFIG REQUIRED)
+find_package(Qt5QuickWidgets 5.12.3 CONFIG REQUIRED)
+find_package(Qt5Qml 5.12.3 CONFIG REQUIRED)
+# find_package(Qt5WebChannel 5.12.3 CONFIG REQUIRED) # > Missing!
+# find_package(Qt5Positioning 5.12.3 CONFIG REQUIRED) # > Missing!
+# find_package(Qt5WebEngine 5.12.3 CONFIG REQUIRED) # > Missing!
+# find_package(Qt5WebEngineWidgets 5.12.3 CONFIG REQUIRED) # > Missing!
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} ${QT_LIBRARY} CONAN_PKG::qt)
+target_link_libraries(${PROJECT_NAME} Qt5::Core)
