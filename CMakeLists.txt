@@ -31,19 +31,40 @@ conan_add_remote(NAME jmarrec
 set(CONAN_OPTIONS "")
 set(CONAN_BUILD "")
 
-list(APPEND CONAN_OPTIONS "qt:shared=True")
-list(APPEND CONAN_OPTIONS "qt:commercial=False")
+list(APPEND CONAN_OPTIONS "qt:commercial=False") # opensource
+list(APPEND CONAN_OPTIONS "qt:shared=True") # Shared, not static
+list(APPEND CONAN_OPTIONS "qt:GUI=True") # Support for GUI applications
+list(APPEND CONAN_OPTIONS "qt:widgets=True") # Support for GUI applications (Widgets are the base classes we use)
+
 list(APPEND CONAN_OPTIONS "qt:openssl=True")
 list(APPEND CONAN_OPTIONS "qt:with_pcre2=True")
 list(APPEND CONAN_OPTIONS "qt:with_harfbuzz=True")
-list(APPEND CONAN_OPTIONS "qt:with_sqlite3=True")
-list(APPEND CONAN_OPTIONS "qt:qtmultimedia=False")
+
+# Database stuff, only need the sqlite3
+list(APPEND CONAN_OPTIONS "qt:with_sqlite3=True") # sqlite: Yes!
+list(APPEND CONAN_OPTIONS "qt:with_mysql=False")  # MySQL
+list(APPEND CONAN_OPTIONS "qt:with_pq=False")     # PostgreSQL
+list(APPEND CONAN_OPTIONS "qt:with_odbc=False")   # Oracle Database
+
+# I think that's why produces Qt Positioning
+list(APPEND CONAN_OPTIONS "qt:qtlocation=True")
+
+# Stuff we definitely want to enable because it's disabled, and we are actively using find_package to find them below
+list(APPEND CONAN_OPTIONS "qt:qtwebengine=True")
+list(APPEND CONAN_OPTIONS "qt:qtwebview=True")
+list(APPEND CONAN_OPTIONS "qt:qtwebchannel=True")
+
 list(APPEND CONAN_OPTIONS "qt:qttools=False")
+
+list(APPEND CONAN_OPTIONS "qt:qtmultimedia=False")
+# Already turned off by qtmultimedia=False
+list(APPEND CONAN_OPTIONS "qt:with_sdl2=False")
+list(APPEND CONAN_OPTIONS "qt:with_openal=False")
+
 list(APPEND CONAN_OPTIONS "qt:qtdoc=False")
 list(APPEND CONAN_OPTIONS "qt:qtsensors=False")
 list(APPEND CONAN_OPTIONS "qt:qtconnectivity=False")
 list(APPEND CONAN_OPTIONS "qt:qtwayland=False")
-list(APPEND CONAN_OPTIONS "qt:qtwebengine=True")
 list(APPEND CONAN_OPTIONS "qt:qtpurchasing=False")
 
 list(APPEND CONAN_BUILD "missing")
@@ -95,7 +116,6 @@ set(CMAKE_AUTOUIC ON)
 message("CONAN_LIB_DIRS_QT=${CONAN_LIB_DIRS_QT}")
 
 find_package(Qt5Core 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Core 5.12.3 CONFIG REQUIRED)
 find_package(Qt5Widgets 5.12.3 CONFIG REQUIRED)
 find_package(Qt5Sql 5.12.3 CONFIG REQUIRED)
 find_package(Qt5Network 5.12.3 CONFIG REQUIRED)
@@ -106,10 +126,10 @@ find_package(Qt5Gui 5.12.3 CONFIG REQUIRED)
 find_package(Qt5Quick 5.12.3 CONFIG REQUIRED)
 find_package(Qt5QuickWidgets 5.12.3 CONFIG REQUIRED)
 find_package(Qt5Qml 5.12.3 CONFIG REQUIRED)
-# find_package(Qt5WebChannel 5.12.3 CONFIG REQUIRED) # > Missing!
-# find_package(Qt5Positioning 5.12.3 CONFIG REQUIRED) # > Missing!
-# find_package(Qt5WebEngine 5.12.3 CONFIG REQUIRED) # > Missing!
-# find_package(Qt5WebEngineWidgets 5.12.3 CONFIG REQUIRED) # > Missing!
+find_package(Qt5WebChannel 5.12.3 CONFIG REQUIRED) # > Missing!
+find_package(Qt5Positioning 5.12.3 CONFIG REQUIRED) # > Missing!
+find_package(Qt5WebEngine 5.12.3 CONFIG REQUIRED) # > Missing!
+find_package(Qt5WebEngineWidgets 5.12.3 CONFIG REQUIRED) # > Missing!
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} Qt5::Core)
