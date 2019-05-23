@@ -36,12 +36,12 @@ list(APPEND CONAN_OPTIONS "qt:shared=True") # Shared, not static
 list(APPEND CONAN_OPTIONS "qt:GUI=True") # Support for GUI applications
 list(APPEND CONAN_OPTIONS "qt:widgets=True") # Support for GUI applications (Widgets are the base classes we use)
 
-list(APPEND CONAN_OPTIONS "qt:openssl=True")
+list(APPEND CONAN_OPTIONS "qt:openssl=True") # For QNetwork
 list(APPEND CONAN_OPTIONS "qt:with_pcre2=True")
 list(APPEND CONAN_OPTIONS "qt:with_harfbuzz=True")
 
-# Database stuff, only need the sqlite3
-list(APPEND CONAN_OPTIONS "qt:with_sqlite3=True") # sqlite: Yes!
+# Database stuff, we don't use QSql at all actuallly
+list(APPEND CONAN_OPTIONS "qt:with_sqlite3=False") # sqlite
 list(APPEND CONAN_OPTIONS "qt:with_mysql=False")  # MySQL
 list(APPEND CONAN_OPTIONS "qt:with_pq=False")     # PostgreSQL
 list(APPEND CONAN_OPTIONS "qt:with_odbc=False")   # Oracle Database
