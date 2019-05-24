@@ -108,7 +108,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
-
+# Deal with qrc files automatically
+set(CMAKE_AUTORCC ON)
 
 #get_target_property(QT_INCLUDE_DIRS CONAN_PKG::qt INTERFACE_INCLUDE_DIRECTORIES)
 #get_target_property(QT_LIB_DIRS CONAN_PKG::qt INTERFACE_LIBRARY_DIRECTORIES)
@@ -116,20 +117,69 @@ set(CMAKE_AUTOUIC ON)
 message("CONAN_LIB_DIRS_QT=${CONAN_LIB_DIRS_QT}")
 
 find_package(Qt5Core 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Widgets 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Sql 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Network 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Xml 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Concurrent 5.12.3 CONFIG REQUIRED)
-find_package(Qt5PrintSupport 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Gui 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Quick 5.12.3 CONFIG REQUIRED)
-find_package(Qt5QuickWidgets 5.12.3 CONFIG REQUIRED)
-find_package(Qt5Qml 5.12.3 CONFIG REQUIRED)
-find_package(Qt5WebChannel 5.12.3 CONFIG REQUIRED) # > Missing!
-find_package(Qt5Positioning 5.12.3 CONFIG REQUIRED) # > Missing!
-find_package(Qt5WebEngine 5.12.3 CONFIG REQUIRED) # > Missing!
-find_package(Qt5WebEngineWidgets 5.12.3 CONFIG REQUIRED) # > Missing!
+list(APPEND QT_LIBS Qt5::Core)
 
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} Qt5::Core)
+find_package(Qt5Widgets 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_LIBS Qt5::Widgets)
+
+# find_package(Qt5Sql 5.12.3 CONFIG REQUIRED)
+# list(APPEND QT_LIBS Qt5::Sql)
+
+find_package(Qt5Network 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_LIBS Qt5::Network)
+
+find_package(Qt5Xml 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_LIBS Qt5::Xml)
+
+find_package(Qt5Concurrent 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_LIBS Qt5::Concurrent)
+
+find_package(Qt5PrintSupport 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_LIBS Qt5::PrintSupport)
+
+find_package(Qt5Gui 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_LIBS Qt5::Gui)
+
+if( WIN32 )
+  find_package(Qt5WinExtras 5.12.3 CONFIG REQUIRED)
+  list(APPEND QT_LIBS Qt5::WinExtras)
+endif()
+
+find_package(Qt5Quick 5.12.3 CONFIG REQUIRED)
+
+find_package(Qt5QuickWidgets 5.12.3 CONFIG REQUIRED)
+
+find_package(Qt5Qml 5.12.3 CONFIG REQUIRED)
+
+find_package(Qt5Positioning 5.12.3 CONFIG REQUIRED) # > Missing!
+
+find_package(Qt5WebEngine 5.12.3 CONFIG REQUIRED) # > Missing!
+list(APPEND QT_WEB_LIBS Qt5::WebEngine)
+list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
+
+find_package(Qt5WebEngineWidgets 5.12.3 CONFIG REQUIRED) # > Missing!
+list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
+
+find_package(Qt5WebChannel 5.12.3 CONFIG REQUIRED)
+list(APPEND QT_WEB_LIBS Qt5::WebChannel)
+
+# add_definitions(${Qt5Widgets_DEFINITIONS} ${QtQml_DEFINITIONS} ${${Qt5Quick_DEFINITIONS}})
+
+set(${PROJECT_NAME}_SRC
+    main.cpp
+)
+
+set(${PROJECT_NAME}_qrc
+  qml.qrc
+)
+
+qt5_add_resources(${PROJECT_NAME}_qrcs ${${PROJECT_NAME}_qrc})
+
+message("${PROJECT_NAME}_SRC=${${PROJECT_NAME}_SRC}")
+message("${PROJECT_NAME}_qrcs=${${PROJECT_NAME}_qrcs}")
+
+
+add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_qrcs})
+target_link_libraries(${PROJECT_NAME}
+  Qt5::WebEngine
+  Qt5::Qml )
